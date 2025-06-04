@@ -1,8 +1,7 @@
-import pandas as pd
 from flask import Flask
 from flask_cors import CORS
-from controllers.complain_controller import ComplainController
-from controllers.logs_controller import LogsController
+from controllers.user_controller import UserController
+from controllers.decision_log_controller import DecisionLogController
 
 def create_app():
     app = Flask(__name__)
@@ -12,29 +11,26 @@ def create_app():
              r"/api/*": {
                  "origins": [
                      "http://localhost:3000", # for User panel
-                     "http://192.168.1.16:3000", # for User panel
+                     "http://192.168.1.5:3000", # for User panel
                      "http://localhost:8000", # for Admin panel
-                     "http://192.168.1.16:8000", # for Admin panel
-                     "http://127.0.0.1:3000",
+                     "http://192.168.1.5:8000", # for Admin panel
+                     "http://127.0.0.1:3000"
                  ]
              }
          })
     # Initialize controllers
-    complain_controller = ComplainController()
-    logs_controller = LogsController()
+    user_controller = UserController()
+    decision_log_controller = DecisionLogController()
 
-    # Complain routes
-    app.add_url_rule('/api/complains/get_all_complains', 'get_all_complains', complain_controller.get_all_complains, methods=['GET'])
-    app.add_url_rule('/api/complains/get_complain_by_id', 'get_complain_by_id', complain_controller.get_complain_by_id, methods=['GET'])
-    app.add_url_rule('/api/complains/get_uploaded_file', 'get_uploaded_file', complain_controller.get_uploaded_file, methods=['GET'])
-    app.add_url_rule('/api/complains/save_complain', 'save_complain', complain_controller.save_complain, methods=['POST'])
+    # User routes
+    app.add_url_rule('/api/users/register', 'user_register', user_controller.register, methods=['POST'])
 
-    # Logs routes
-    app.add_url_rule('/api/logs/get_all_logs', 'get_all_logs', logs_controller.get_all_logs, methods=['GET'])
-    app.add_url_rule('/api/logs/add_log', 'add_log', logs_controller.add_log, methods=['POST'])
+    # Decision Log routes
+    app.add_url_rule('/api/decisionLog/get_decision_logs_by_user_id', 'get_decision_logs_by_user_id', decision_log_controller.get_decision_logs_by_user_id, methods=['GET'])
 
     return app
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(debug=True, use_reloader=False, port=5005)
+    # app.run(host='0.0.0.0', port= 5000)
+    app.run(debug=True, use_reloader=False, port= 5003)

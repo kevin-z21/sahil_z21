@@ -1,3 +1,5 @@
+from core.database import Database
+
 class BaseService:
     def __init__(self):
-        pass
+        self.db = Database()
